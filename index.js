@@ -2,10 +2,74 @@ const core = require('@actions/core');
 const assert = require('assert');
 const { Builder } = require('selenium-webdriver');
 const http = require('http');
-const cap = require('./capabilities');
-const HttpAgent = new http.Agent({ keepAlive: true });
-const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
+
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
+
+/**
+ * Capabilities
+ * https://www.browserstack.com/automate/capabilities
+ */
+const capabilityMap = {
+  ie8: {
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '8.0',
+  },
+  ie9: {
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '9.0',
+  },
+  ie10: {
+    os: 'Windows',
+    osVersion: '7',
+    name: 'IE10 Test',
+    browserName: 'IE',
+    browserVersion: '10.0',
+  },
+  ie11: {
+    os: 'Windows',
+    osVersion: '10',
+    name: 'IE11 Test',
+    browserName: 'IE',
+    browserVersion: '11.0',
+  },
+  safari: {
+    os: 'OS X',
+    osVersion: 'Catalina',
+    name: 'Safari Test',
+    browserName: 'Safari',
+  },
+  edge: {
+    os: 'Windows',
+    osVersion: '10',
+    name: 'Edge Test',
+    browserName: 'Edge',
+  },
+  firefox: {
+    browserName: 'Firefox',
+    name: 'Firefox Test',
+    os: 'Windows',
+  },
+  chrome: {
+    browserName: 'Chrome',
+    name: 'Chrome Test',
+    os: 'Windows',
+  },
+};
+
+function makeCapabilites(browsers) {
+  const list = browsers.toLowerCase().replace(/ /g, '').split(',');
+  return list.reduce((acc, browser) => {
+    if (!capabilityMap[browser]) {
+      throw Error('unsupported browser!');
+    }
+
+    return [...acc, capabilityMap[browser]];
+  }, []);
+}
 
 /**
  * Url test
@@ -72,6 +136,9 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
  * Get Selenium Builder
  */
 function getDriver(platformInfo) {
+  const HttpAgent = new http.Agent({ keepAlive: true });
+  const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
+
   return new Builder()
     .usingHttpAgent(HttpAgent)
     .withCapabilities({
@@ -97,8 +164,8 @@ function printErrorLog(errorBrowsersInfo) {
 try {
   const urls = core.getInput('urls').replace(/ /g, '').split(',');
   const globalVariable = core.getInput('global-error-log-variable');
-  const browsers = core.getInput('browsers');
-  const capabilities = cap.makeCapabilites(browsers);
+  const browserlist = core.getInput('browserlist');
+  const capabilities = makeCapabilites(browserlist);
 
   if (!globalVariable) {
     throw Error('global-error-log-variable is missing at action.yml');
