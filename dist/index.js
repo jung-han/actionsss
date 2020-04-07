@@ -16514,14 +16514,76 @@ function Qc(a){if(Ec){if("relative"==Y(a,"position"))return 1;a=Y(a,"filter");re
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(338);
-const capa = __webpack_require__(449);
-const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
-
 const assert = __webpack_require__(357);
 const http = __webpack_require__(605);
 const { Builder } = __webpack_require__(726);
-const HttpAgent = new http.Agent({ keepAlive: true });
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
+
+/**
+ * Capabilities
+ * https://www.browserstack.com/automate/capabilities
+ */
+const capabilityMap = {
+  ie8: {
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '8.0',
+  },
+  ie9: {
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '9.0',
+  },
+  ie10: {
+    os: 'Windows',
+    osVersion: '7',
+    name: 'IE10 Test',
+    browserName: 'IE',
+    browserVersion: '10.0',
+  },
+  ie11: {
+    os: 'Windows',
+    osVersion: '10',
+    name: 'IE11 Test',
+    browserName: 'IE',
+    browserVersion: '11.0',
+  },
+  safari: {
+    os: 'OS X',
+    osVersion: 'Catalina',
+    name: 'Safari Test',
+    browserName: 'Safari',
+  },
+  edge: {
+    os: 'Windows',
+    osVersion: '10',
+    name: 'Edge Test',
+    browserName: 'Edge',
+  },
+  firefox: {
+    browserName: 'Firefox',
+    name: 'Firefox Test',
+    os: 'Windows',
+  },
+  chrome: {
+    browserName: 'Chrome',
+    name: 'Chrome Test',
+    os: 'Windows',
+  },
+};
+
+function makeCapabilites(browsers) {
+  const list = browsers.toLowerCase().replace(/ /g, '').split(',');
+  return list.reduce((acc, browser) => {
+    if (!capabilityMap[browser]) {
+      throw Error('unsupported browser!');
+    }
+
+    return [...acc, capabilityMap[browser]];
+  }, []);
+}
 
 /**
  * Url test
@@ -16547,7 +16609,6 @@ async function testExamplePage(urls, capabilities, globalErrorLogVariable) {
   printErrorLog(result);
 
   assert.equal(result.length, 0);
-  core.setOutput('result', result.length ? 'failed' : 'success');
 }
 
 /*
@@ -16589,6 +16650,9 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
  * Get Selenium Builder
  */
 function getDriver(platformInfo) {
+  const HttpAgent = new http.Agent({ keepAlive: true });
+  const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
+
   return new Builder()
     .usingHttpAgent(HttpAgent)
     .withCapabilities({
@@ -16606,8 +16670,8 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n- - - - -`);
-    console.log(errorLogs, '- - - - -\n');
+    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n`);
+    console.log(errorLogs, '\n');
   });
 }
 
@@ -16615,7 +16679,7 @@ try {
   const urls = core.getInput('urls').replace(/ /g, '').split(',');
   const globalVariable = core.getInput('global-error-log-variable');
   const browsers = core.getInput('browsers');
-  const capabilities = capa.makeCapabilites(browsers);
+  const capabilities = makeCapabilites(browsers);
 
   if (!globalVariable) {
     throw Error('global-error-log-variable is missing at action.yml');
@@ -21770,82 +21834,6 @@ module.exports = function (data) {
         return new Uint8ArrayReader(utils.transformTo("uint8array", data));
     }
     return new ArrayReader(utils.transformTo("array", data));
-};
-
-
-/***/ }),
-
-/***/ 449:
-/***/ (function(module) {
-
-/**
- * Capabilities
- * https://www.browserstack.com/automate/capabilities
- */
-const capabilityMap = {
-  ie8: {
-    os: 'Windows',
-    os_version: '7',
-    browserName: 'IE',
-    browser_version: '8.0',
-  },
-  ie9: {
-    os: 'Windows',
-    os_version: '7',
-    browserName: 'IE',
-    browser_version: '9.0',
-  },
-  ie10: {
-    os: 'Windows',
-    osVersion: '7',
-    name: 'IE10 Test',
-    browserName: 'IE',
-    browserVersion: '10.0',
-  },
-  ie11: {
-    os: 'Windows',
-    osVersion: '10',
-    name: 'IE11 Test',
-    browserName: 'IE',
-    browserVersion: '11.0',
-  },
-  safari: {
-    os: 'OS X',
-    osVersion: 'Catalina',
-    name: 'Safari Test',
-    browserName: 'Safari',
-  },
-  edge: {
-    os: 'Windows',
-    osVersion: '10',
-    name: 'Edge Test',
-    browserName: 'Edge',
-  },
-  firefox: {
-    browserName: 'Firefox',
-    name: 'Firefox Test',
-    os: 'Windows',
-  },
-  chrome: {
-    browserName: 'Chrome',
-    name: 'Chrome Test',
-    os: 'Windows',
-  },
-};
-
-function makeCapabilites(browsers) {
-  const list = browsers.toLowerCase().replace(/ /g, '').split(',');
-  return list.reduce((acc, browser) => {
-    if (!capabilityMap[browser]) {
-      throw Error('unsupported browser!');
-    }
-
-    return [...acc, capabilityMap[browser]];
-  }, []);
-}
-
-module.exports = {
-  makeCapabilites,
 };
 
 

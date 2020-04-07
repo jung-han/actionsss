@@ -16,9 +16,6 @@ inputs:
     description: 'file path(tuidoc.config.js file path)'
     required: true
     default: 'examples'
-outputs:
-  result:
-    description: 'test result'
 runs:
   using: 'node12'
   main: 'dist/index.js'
