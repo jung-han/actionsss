@@ -62,7 +62,7 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
 
     result.push({ url, browserName, browserVersion, errorLogs });
 
-    console.log(`🚀 ${browserName}${browserVersion} - ${url}`);
+    console.log(`🚀 ${browserName} ${browserVersion} - ${url}`);
   }
 
   driver.quit();
@@ -91,7 +91,8 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.error(`🔥 ${url} / ${browserName}${browserVersion} \n ${errorLogs}`);
+    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n- - - - -`);
+    console.log(errorLogs, '- - - - -\n');
   });
 }
 
@@ -106,7 +107,7 @@ try {
   }
 
   testExamplePage(urls, capabilities, globalVariable).catch((err) => {
-    console.error(err);
+    console.log(err);
     process.exit(1);
   });
 

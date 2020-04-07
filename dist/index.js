@@ -16577,7 +16577,7 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
 
     result.push({ url, browserName, browserVersion, errorLogs });
 
-    console.log(`🚀 ${browserName}${browserVersion} - ${url}`);
+    console.log(`🚀 ${browserName} ${browserVersion} - ${url}`);
   }
 
   driver.quit();
@@ -16606,7 +16606,8 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.error(`🔥 ${url} / ${browserName}${browserVersion} \n ${errorLogs}`);
+    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n- - - - -`);
+    console.log(errorLogs, '- - - - -\n');
   });
 }
 
@@ -16621,7 +16622,7 @@ try {
   }
 
   testExamplePage(urls, capabilities, globalVariable).catch((err) => {
-    console.error(err);
+    console.log(err);
     process.exit(1);
   });
 
@@ -21783,58 +21784,64 @@ module.exports = function (data) {
  */
 const capabilityMap = {
   ie8: {
-    os: "Windows",
-    os_version: "7",
-    browserName: "IE",
-    browser_version: "8.0",
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '8.0',
   },
   ie9: {
-    os: "Windows",
-    os_version: "7",
-    browserName: "IE",
-    browser_version: "9.0",
+    os: 'Windows',
+    os_version: '7',
+    browserName: 'IE',
+    browser_version: '9.0',
   },
   ie10: {
-    os: "Windows",
-    osVersion: "7",
-    name: "IE10 Test",
-    browserName: "IE",
-    browserVersion: "10.0",
+    os: 'Windows',
+    osVersion: '7',
+    name: 'IE10 Test',
+    browserName: 'IE',
+    browserVersion: '10.0',
   },
   ie11: {
-    os: "Windows",
-    osVersion: "10",
-    name: "IE11 Test",
-    browserName: "IE",
-    browserVersion: "11.0",
+    os: 'Windows',
+    osVersion: '10',
+    name: 'IE11 Test',
+    browserName: 'IE',
+    browserVersion: '11.0',
   },
   safari: {
-    os: "OS X",
-    osVersion: "Catalina",
-    name: "Safari Test",
-    browserName: "Safari",
+    os: 'OS X',
+    osVersion: 'Catalina',
+    name: 'Safari Test',
+    browserName: 'Safari',
   },
   edge: {
-    os: "Windows",
-    osVersion: "10",
-    name: "Edge Test",
-    browserName: "Edge",
+    os: 'Windows',
+    osVersion: '10',
+    name: 'Edge Test',
+    browserName: 'Edge',
   },
   firefox: {
-    browserName: "Firefox",
-    name: "Firefox Test",
-    os: "Windows",
+    browserName: 'Firefox',
+    name: 'Firefox Test',
+    os: 'Windows',
   },
   chrome: {
-    browserName: "Chrome",
-    name: "Chrome Test",
-    os: "Windows",
+    browserName: 'Chrome',
+    name: 'Chrome Test',
+    os: 'Windows',
   },
 };
 
 function makeCapabilites(browsers) {
-  const list = browsers.toLowerCase().replace(/ /g, "").split(",");
-  return list.reduce((acc, browser) => [...acc, capabilityMap[browser]], []);
+  const list = browsers.toLowerCase().replace(/ /g, '').split(',');
+  return list.reduce((acc, browser) => {
+    if (!capabilityMap[browser]) {
+      throw Error('unsupported browser!');
+    }
+
+    return [...acc, capabilityMap[browser]];
+  }, []);
 }
 
 module.exports = {
