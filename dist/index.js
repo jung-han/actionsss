@@ -16617,25 +16617,10 @@ function printErrorLog(errorBrowsersInfo) {
   });
 }
 
-/**
- * Get Examples Url
- */
-function getTestUrls(urlPrefix, filePath) {
-  if (!filePath) {
-    throw Error('not exist examples path at tuidoc.config.json');
-  }
-
-  return fs.readdirSync(filePath).reduce((urls, fileName) => {
-    if (/html$/.test(fileName)) {
-      urls.push(`${urlPrefix}/${filePath}/${fileName}`);
-    }
-    return urls;
-  }, []);
-}
-
 try {
   const urls = core.getInput('urls');
   console.log(urls, 'urls');
+  console.log(process.env, 'env');
   // const globalVariable = core.getInput('global-error-log-variable');
   // const browsers = core.getInput('browsers');
   // const filePath = core.getInput('filepath');
@@ -16643,7 +16628,6 @@ try {
   // if (!globalVariable) {
   //   throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
   // }
-  // const urls = getTestUrls(urlPrefix, filePath);
   // testExamplePage(urls, capabilities, globalVariable).catch((err) => {
   //   console.log(err);
   //   process.exit(1);
