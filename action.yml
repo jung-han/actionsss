@@ -1,13 +1,20 @@
-name: "Hello World"
-description: "Greet someone and record the time"
+name: 'TOAST UI Example Page 404 Checker(browserStack)'
+description: 'TOAST UI Example Page 404 Checker'
 inputs:
-  who-to-greet: # id of input
-    description: "Who to greet"
+  url-prefix:
+    description: 'url prefix(ex: http://nhn.github.io/tui.image-editor/latest)'
     required: true
-    default: "World"
+  global-error-log-variable:
+    description: 'error log array variable name(ex: errorLogs)'
+    required: true
+    default: false
+  browsers:
+    description: 'browser list'
+    required: true
+    default: 'ie10, ie11, safari, edge, chrome, firefox'
 outputs:
-  time: # id of output
-    description: "The time we greeted you"
+  result:
+    description: 'test result'
 runs:
-  using: "node12"
-  main: "dist/index.js"
+  using: 'node12'
+  main: 'dist/index.js'

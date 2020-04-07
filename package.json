@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "@actions/github": "^2.1.1"
+    "@actions/github": "^2.1.1",
+    "prettier": "^2.0.4",
+    "selenium-webdriver": "^4.0.0-alpha.7"
   }
 }
