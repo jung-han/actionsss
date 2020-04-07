@@ -1,7 +1,9 @@
 const core = require('@actions/core');
 const assert = require('assert');
-const http = require('http');
 const { Builder } = require('selenium-webdriver');
+const http = require('http');
+const HttpAgent = new http.Agent({ keepAlive: true });
+const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
 
 /**
@@ -135,9 +137,6 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
  * Get Selenium Builder
  */
 function getDriver(platformInfo) {
-  const HttpAgent = new http.Agent({ keepAlive: true });
-  const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
-
   return new Builder()
     .usingHttpAgent(HttpAgent)
     .withCapabilities({

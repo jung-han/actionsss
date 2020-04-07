@@ -16515,8 +16515,10 @@ function Qc(a){if(Ec){if("relative"==Y(a,"position"))return 1;a=Y(a,"filter");re
 
 const core = __webpack_require__(338);
 const assert = __webpack_require__(357);
-const http = __webpack_require__(605);
 const { Builder } = __webpack_require__(726);
+const http = __webpack_require__(605);
+const HttpAgent = new http.Agent({ keepAlive: true });
+const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
 
 /**
@@ -16650,9 +16652,6 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
  * Get Selenium Builder
  */
 function getDriver(platformInfo) {
-  const HttpAgent = new http.Agent({ keepAlive: true });
-  const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
-
   return new Builder()
     .usingHttpAgent(HttpAgent)
     .withCapabilities({
@@ -16670,7 +16669,7 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n`);
+    console.log(`\n🔥 ${browserName} ${browserVersion} ${url} / `);
     console.log(errorLogs, '\n');
   });
 }
