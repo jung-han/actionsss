@@ -16525,9 +16525,9 @@ const http = __webpack_require__(605);
 const { Builder } = __webpack_require__(726);
 const HttpAgent = new http.Agent({ keepAlive: true });
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
-const config = __webpack_require__(934); // config를 잘 가져가는지
-const examples = config.examples || {};
-const { filePath = '' } = examples;
+// const config = require(path.resolve(process.cwd(), 'tuidoc.config.json')); // config를 잘 가져가는지
+// const examples = config.examples || {};
+// const { filePath = '' } = examples;
 
 /**
  * Url test
@@ -16620,7 +16620,7 @@ function printErrorLog(errorBrowsersInfo) {
 /**
  * Get Examples Url
  */
-function getTestUrls(urlPrefix) {
+function getTestUrls(urlPrefix, filePath) {
   if (!filePath) {
     throw Error('not exist examples path at tuidoc.config.json');
   }
@@ -16634,22 +16634,20 @@ function getTestUrls(urlPrefix) {
 }
 
 try {
-  const urlPrefix = core.getInput('url-prefix');
-  const globalVariable = core.getInput('global-error-log-variable');
-  const browsers = core.getInput('browsers');
-  const capabilities = capa.makeCapabilites(browsers);
-
-  if (!globalVariable) {
-    throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
-  }
-
-  const urls = getTestUrls(urlPrefix);
-
-  testExamplePage(urls, capabilities, globalVariable).catch((err) => {
-    console.log(err);
-    process.exit(1);
-  });
-
+  const urls = core.getInput('urls');
+  console.log(urls, 'urls');
+  // const globalVariable = core.getInput('global-error-log-variable');
+  // const browsers = core.getInput('browsers');
+  // const filePath = core.getInput('filepath');
+  // const capabilities = capa.makeCapabilites(browsers);
+  // if (!globalVariable) {
+  //   throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
+  // }
+  // const urls = getTestUrls(urlPrefix, filePath);
+  // testExamplePage(urls, capabilities, globalVariable).catch((err) => {
+  //   console.log(err);
+  //   process.exit(1);
+  // });
   // const time = new Date().toTimeString();
   // core.setOutput("time", time);
 } catch (error) {
@@ -32513,14 +32511,6 @@ Uint8ArrayReader.prototype.readData = function(size) {
     return result;
 };
 module.exports = Uint8ArrayReader;
-
-
-/***/ }),
-
-/***/ 934:
-/***/ (function(module) {
-
-module.exports = eval("require")("/Users/nhnent/github_actions_test/tuidoc.config.json");
 
 
 /***/ }),

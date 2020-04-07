@@ -1,8 +1,8 @@
 name: 'TOAST UI Example Page 404 Checker(browserStack)'
 description: 'TOAST UI Example Page 404 Checker'
 inputs:
-  url-prefix:
-    description: 'url prefix(ex: http://nhn.github.io/tui.image-editor/latest)'
+  urls:
+    description: 'urls'
     required: true
   global-error-log-variable:
     description: 'error log array variable name(ex: errorLogs)'
@@ -12,6 +12,10 @@ inputs:
     description: 'browser list'
     required: true
     default: 'ie10, ie11, safari, edge, chrome, firefox'
+  filepath:
+    description: 'file path(tuidoc.config.js file path)'
+    required: true
+    default: 'examples'
 outputs:
   result:
     description: 'test result'
