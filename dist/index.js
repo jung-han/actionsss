@@ -16514,12 +16514,9 @@ function Qc(a){if(Ec){if("relative"==Y(a,"position"))return 1;a=Y(a,"filter");re
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(338);
-// const github = require('@actions/github');
 const capa = __webpack_require__(449);
 const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env; // 1. 이 키를 잘 가져가는지
 
-const fs = __webpack_require__(747);
-const path = __webpack_require__(622);
 const assert = __webpack_require__(357);
 const http = __webpack_require__(605);
 const { Builder } = __webpack_require__(726);
@@ -16618,22 +16615,19 @@ function printErrorLog(errorBrowsersInfo) {
 }
 
 try {
-  const urls = core.getInput('urls');
-  console.log(urls, 'urls');
-  console.log(process.env, 'env');
-  // const globalVariable = core.getInput('global-error-log-variable');
-  // const browsers = core.getInput('browsers');
-  // const filePath = core.getInput('filepath');
-  // const capabilities = capa.makeCapabilites(browsers);
-  // if (!globalVariable) {
-  //   throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
-  // }
-  // testExamplePage(urls, capabilities, globalVariable).catch((err) => {
-  //   console.log(err);
-  //   process.exit(1);
-  // });
-  // const time = new Date().toTimeString();
-  // core.setOutput("time", time);
+  const urls = core.getInput('urls').replace(/ /g, '').split(',');
+  const globalVariable = core.getInput('global-error-log-variable');
+  const browsers = core.getInput('browsers');
+  const capabilities = capa.makeCapabilites(browsers);
+  if (!globalVariable) {
+    throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
+  }
+  testExamplePage(urls, capabilities, globalVariable).catch((err) => {
+    console.log(err);
+    process.exit(1);
+  });
+  const time = new Date().toTimeString();
+  core.setOutput('time', time);
 } catch (error) {
   core.setFailed(error.message);
 }
