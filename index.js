@@ -1,15 +1,12 @@
 const core = require('@actions/core');
 const capa = require('./capa');
-const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env; // 1. 이 키를 잘 가져가는지
+const { BROWSERSTACK_USERNAME, BROWSERSTACK_ACCESS_KEY } = process.env;
 
 const assert = require('assert');
 const http = require('http');
 const { Builder } = require('selenium-webdriver');
 const HttpAgent = new http.Agent({ keepAlive: true });
 const DOCUMENT_LOAD_MAX_TIMEOUT = 20000;
-// const config = require(path.resolve(process.cwd(), 'tuidoc.config.json')); // config를 잘 가져가는지
-// const examples = config.examples || {};
-// const { filePath = '' } = examples;
 
 /**
  * Url test
@@ -65,7 +62,7 @@ async function testPlatform(platformInfo, urls, globalErrorLogVariable) {
 
     result.push({ url, browserName, browserVersion, errorLogs });
 
-    console.log(browserName, browserVersion, ' - ', url);
+    console.log(`🚀 ${browserName}${browserVersion} - ${url}`);
   }
 
   driver.quit();
@@ -94,8 +91,7 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.log(url);
-    console.log(browserName, browserVersion, errorLogs); // error 찍기
+    console.error(`🔥 ${url} / ${browserName}${browserVersion} \n ${errorLogs}`);
   });
 }
 
@@ -104,13 +100,16 @@ try {
   const globalVariable = core.getInput('global-error-log-variable');
   const browsers = core.getInput('browsers');
   const capabilities = capa.makeCapabilites(browsers);
+
   if (!globalVariable) {
-    throw Error('globalErrorLogVariable option is missing at tuidoc.config.json');
+    throw Error('global-error-log-variable is missing at action.yml');
   }
+
   testExamplePage(urls, capabilities, globalVariable).catch((err) => {
-    console.log(err);
+    console.error(err);
     process.exit(1);
   });
+
   const time = new Date().toTimeString();
   core.setOutput('time', time);
 } catch (error) {
