@@ -1,5 +1,5 @@
-name: 'TOAST UI Example Page 404 Checker(browserStack)'
-description: 'TOAST UI Example Page 404 Checker'
+name: 'TOAST UI Checking url error using browserstack'
+description: 'Checking url error using browserstack'
 inputs:
   urls:
     description: 'urls'
@@ -8,14 +8,10 @@ inputs:
     description: 'error log array variable name(ex: errorLogs)'
     required: true
     default: false
-  browsers:
+  browserlist:
     description: 'browser list'
     required: true
     default: 'ie10, ie11, safari, edge, chrome, firefox'
-  filepath:
-    description: 'file path(tuidoc.config.js file path)'
-    required: true
-    default: 'examples'
 runs:
   using: 'node12'
   main: 'dist/index.js'

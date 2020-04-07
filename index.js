@@ -155,7 +155,7 @@ function getDriver(platformInfo) {
  */
 function printErrorLog(errorBrowsersInfo) {
   errorBrowsersInfo.forEach(({ url, browserName, browserVersion, errorLogs }) => {
-    console.log(`\n🔥 ${url} / ${browserName} ${browserVersion}\n`);
+    console.log(`\n🔥 ${browserName} ${browserVersion} ${url} / `);
     console.log(errorLogs, '\n');
   });
 }
